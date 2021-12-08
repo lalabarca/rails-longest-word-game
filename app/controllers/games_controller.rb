@@ -10,14 +10,22 @@ class GamesController < ApplicationController
       @letters << ('A'..'Z').to_a.sample
       i += 1
     end
-    return @letters
+    @letters
   end
+
+  def score
+    @word = params[:word].upcase
+    @letters = params[:letters].split
+    @valid = valid?(@word)
+    @in_grid = in_the_grid?(@word, @letters)
+  end
+
+  private
 
   def in_the_grid?(attempt, letters)
     # letters inclue toutes les lettres de attempt
-    my_word = attempt.chars.map { |letter| letter.upcase }
-    my_word.all? do |x|
-      letters.count(x) >= my_word.count(x)
+    attempt.chars.all? do |x|
+      letters.count(x) >= attempt.count(x)
     end
   end
 
@@ -27,20 +35,4 @@ class GamesController < ApplicationController
     result = JSON.parse(dictionary)
     result['found']
   end
-
-  def score
-    @word = params[:word]
-    @letters = params[:letters]
-
-    if valid?(@word) && in_the_grid?(@word, @letters)
-      "Congratulations! #{@word.upcase} is a valid english word."
-    elsif in_the_grid?(@word, @letters) == false
-      "Sorry but #{@word.upcase} can't be built out of #{@letters.join(',')}."
-    else
-      "Sorry but #{@word.upcase} does not seem to be a valid English word..."
-    end
-  end
-
-  # helper_method :new
-  helper_method :score
 end

@@ -1,5 +1,14 @@
 <main class="container">
   <h1>Your score</h1>
-  <p>The grid: <%= @letters %></p>
-  <%= score %>
+  <p>The grid: <%= @letters.join(' ') %></p>
+  <% if @in_grid %>
+    <% if @valid %>
+      <p>Congratulations! <strong><%= @word %></strong> is a valid english word.</p>
+    <% else %>
+    <p>Sorry but <strong><%= @word %></strong> does not seem to be a valid English word...</p>
+    <% end %>
+  <% else %>
+    <p>Sorry but <strong><%= @word %></strong> can't be built out of <strong><%= @letters.join(',') %></strong></p>
+  <% end %>
+  <%= link_to "Play again", new_path %>
 </main>
